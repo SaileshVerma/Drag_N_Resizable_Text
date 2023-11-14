@@ -1,4 +1,4 @@
-import 'package:drag_n_drop/home_page.dart';
+import 'package:drag_n_drop/editor_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const EditorScreen(),
     );
   }
 }
