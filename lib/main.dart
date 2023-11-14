@@ -1,4 +1,4 @@
-import 'package:drag_n_drop/editor_screen.dart';
+import 'package:drag_n_drop/editor_screen/editor_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';

@@ -1,4 +1,7 @@
-import 'package:drag_n_drop/states.dart';
+import 'dart:io';
+
+import 'package:drag_n_drop/providers/image_provider_state.dart';
+import 'package:drag_n_drop/providers/text_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -8,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textState = ref.watch(textStateProvider);
+    final imagesListState = ref.watch(imagesStateProvider);
     return Scaffold(
       backgroundColor: Colors.green,
       appBar: AppBar(
@@ -15,6 +19,24 @@ class HomeScreen extends ConsumerWidget {
         title: const Text('Your Highlight'),
       ),
       body: Stack(children: [
+        Stack(
+          children: List.generate(imagesListState.length, (index) {
+            final textData = imagesListState[index];
+
+            return Positioned(
+              left: textData.offset.dx,
+              top: textData.offset.dy,
+              child: Container(
+                height: 100 * textData.scaleMultiplier,
+                width: 100 * textData.scaleMultiplier,
+                // color: Colors.black12,
+                child: Image.file(
+                  File(textData.image),
+                ),
+              ),
+            );
+          }),
+        ),
         Stack(
           children: List.generate(textState.length, (index) {
             final textData = textState[index];
