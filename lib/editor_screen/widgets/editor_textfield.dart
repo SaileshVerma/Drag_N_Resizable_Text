@@ -15,15 +15,39 @@ class AddContentTextField extends ConsumerStatefulWidget {
 class _AddContentTextFieldState extends ConsumerState<AddContentTextField> {
   final TextEditingController textEditingController = TextEditingController();
 
+  bool isBolded = false;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: () {
+        ref.read(showButtonProvider.notifier).state = true;
+      },
+      // onTapOutside: (_) {
+      //   ref.read(showButtonProvider.notifier).state = false;
+      // },
       controller: textEditingController,
       textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 14,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: isBolded ? FontWeight.w700 : FontWeight.w400,
       ),
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        prefixIcon: ref.watch(showButtonProvider)
+            ? TextButton(
+                onPressed: () {
+                  setState(() {
+                    isBolded = !isBolded;
+                  });
+                },
+                child: const Text(
+                  'BOLD',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              )
+            : null,
         enabledBorder: InputBorder.none,
         border: InputBorder.none,
         focusedBorder: InputBorder.none,
@@ -41,10 +65,15 @@ class _AddContentTextFieldState extends ConsumerState<AddContentTextField> {
         ref.read(textStateProvider.notifier).addTextToStateList(
               text: val,
               // offset: Offset(80, 100),
+              isBolded: isBolded,
               multiplier: 1,
             );
 
         textEditingController.clear();
+        ref.read(showButtonProvider.notifier).state = false;
+        setState(() {
+          isBolded = false;
+        });
       },
     );
   }
