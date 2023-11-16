@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class FeedBackWidget extends StatelessWidget {
+  final bool? isBold;
+
   const FeedBackWidget({
     super.key,
     required this.scaleVal,
     required this.txt,
+    this.isBold,
   });
 
   final double scaleVal;
@@ -19,12 +22,18 @@ class FeedBackWidget extends StatelessWidget {
       child: Opacity(
         opacity: 0.8,
         child: Container(
-          color: Colors.black12,
+          color: Colors.transparent,
           height: MediaQuery.of(context).size.height * 0.04 * scaleVal,
-          width: MediaQuery.of(context).size.width * scaleVal,
-          child: Text(
-            txt,
-            style: TextStyle(fontSize: 14 * scaleVal),
+          width: MediaQuery.of(context).size.width * 0.8 * scaleVal,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 100.0),
+            child: Text(
+              txt,
+              style: TextStyle(
+                fontSize: 16 * scaleVal,
+                fontWeight: (isBold ?? false) ? FontWeight.w700 : null,
+              ),
+            ),
           ),
         ),
       ),
@@ -51,7 +60,7 @@ class ImageFeedBackWidget extends StatelessWidget {
         child: Container(
           height: 100 * scaleVal,
           width: 100 * scaleVal,
-          color: Colors.black12,
+          color: Colors.transparent,
           child: Image.file(
             File(imagePath),
           ),

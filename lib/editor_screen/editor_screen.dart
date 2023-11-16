@@ -18,11 +18,11 @@ class EditorScreen extends ConsumerWidget {
     final imagesProvider = ref.watch(imagesStateProvider);
 
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         title: const Text('Your Editor'),
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.white,
         actions: [
           const ClearActionButtonWidget(),
           const ImagePickerActionButton(),
@@ -86,6 +86,7 @@ class EditorBody extends StatelessWidget {
                     final textItem = textListProvider[index];
 
                     return DraggableNResizableText(
+                      isBold: textItem.isBold,
                       id: textItem.id,
                       text: textItem.text,
                       initialOffset: textItem.offset,

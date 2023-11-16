@@ -13,9 +13,9 @@ class HomeScreen extends ConsumerWidget {
     final textState = ref.watch(textStateProvider);
     final imagesListState = ref.watch(imagesStateProvider);
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.white,
         title: const Text('Your Highlight'),
       ),
       body: Stack(children: [
@@ -52,10 +52,15 @@ class HomeScreen extends ConsumerWidget {
                 width: MediaQuery.of(context).size.width *
                     0.8 *
                     textData.scaleMultiplier,
-                child: Text(
-                  textData.text,
-                  style: TextStyle(
-                    fontSize: 14 * (textData.scaleMultiplier),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 100.0),
+                  child: Text(
+                    textData.text,
+                    style: TextStyle(
+                      fontSize: 16 * (textData.scaleMultiplier),
+                      fontWeight:
+                          (textData.isBold ?? false) ? FontWeight.w700 : null,
+                    ),
                   ),
                 ),
               ),
