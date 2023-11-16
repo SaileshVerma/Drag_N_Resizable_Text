@@ -39,12 +39,7 @@ class ImagesStateNotifier extends StateNotifier<List<PositionedImageState>> {
   }) {
     final newList = state;
 
-    final newOffset = state.isEmpty
-        ? const Offset(80, 100)
-        : Offset(
-            state[state.length - 1].offset.dx - 20,
-            state[state.length - 1].offset.dy - 20,
-          );
+    final newOffset = Offset(134.0, 172.7);
 
     newList.add(PositionedImageState(
       id: DateTime.now().toIso8601String(),
