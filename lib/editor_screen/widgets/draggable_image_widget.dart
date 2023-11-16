@@ -76,7 +76,7 @@ class _DraggableNResizableImageState
           imagePath: widget.image,
         ),
         child: Container(
-          color: Colors.green,
+          color: Colors.transparent,
           height: 100 * scaleMultiplier,
           width: 100 * scaleMultiplier,
           // height: MediaQuery.of(context).size.height * 0.2 * scaleMultiplier,
@@ -108,7 +108,7 @@ class _DraggableNResizableImageState
                 child: Container(
                   height: 100 * scaleMultiplier,
                   width: 100 * scaleMultiplier,
-                  color: Colors.black12,
+                  color: Colors.transparent,
                   child: Opacity(
                     opacity: 0,
                     child: Image.file(

@@ -9,6 +9,7 @@ class DraggableNResizableText extends ConsumerStatefulWidget {
   final Offset initialOffset;
   final double multiplier;
   final String text;
+  final bool? isBold;
   final BoxConstraints constraints;
 
   const DraggableNResizableText({
@@ -17,6 +18,7 @@ class DraggableNResizableText extends ConsumerStatefulWidget {
     required this.initialOffset,
     required this.multiplier,
     required this.constraints,
+    this.isBold,
     super.key,
   });
 
@@ -43,6 +45,7 @@ class _DraggableNResizableTextState
     scaleMultiplier = widget.multiplier;
     currentTextOffset = widget.initialOffset;
 
+    print(currentTextOffset);
     return Positioned(
       left: currentTextOffset.dx,
       top: currentTextOffset.dy,
@@ -51,6 +54,7 @@ class _DraggableNResizableTextState
         feedback: FeedBackWidget(
           scaleVal: scaleMultiplier,
           txt: widget.text,
+          isBold: widget.isBold,
         ),
         onDragEnd: (details) {
           final adjustments =
@@ -71,42 +75,53 @@ class _DraggableNResizableTextState
         },
         childWhenDragging: ChildWhenDraggingWidget(
           scaleMultiplier: scaleMultiplier,
+          isBold: widget.isBold,
           txt: widget.text,
         ),
         child: Container(
           color: Colors.transparent,
-          height: MediaQuery.of(context).size.height * 0.2 * scaleMultiplier,
+          height: MediaQuery.of(context).size.height * 0.04 * scaleMultiplier,
           width: MediaQuery.of(context).size.width * 0.8 * scaleMultiplier,
           child: Stack(
             // alignment: Alignment.center,
             children: [
-              Text(
-                widget.text,
-                style: TextStyle(fontSize: 14 * scaleMultiplier),
+              Padding(
+                padding: const EdgeInsets.only(left: 100.0),
+                child: Text(
+                  widget.text,
+                  style: TextStyle(
+                    fontSize: 16 * scaleMultiplier,
+                    fontWeight:
+                        (widget.isBold ?? false) ? FontWeight.w700 : null,
+                  ),
+                ),
               ),
-              InteractiveViewer(
-                panEnabled: false,
-                trackpadScrollCausesScale: true,
-                transformationController: _controller,
-                scaleEnabled: true,
-                boundaryMargin: const EdgeInsets.all(0),
-                minScale: 1,
-                maxScale: 4,
-                onInteractionUpdate: (details) {
-                  final val = _controller.value.getMaxScaleOnAxis();
+              Container(
+                color: Colors.pink.withOpacity(0.0),
+                child: InteractiveViewer(
+                  panEnabled: false,
+                  trackpadScrollCausesScale: true,
+                  transformationController: _controller,
+                  scaleEnabled: true,
+                  boundaryMargin: const EdgeInsets.all(0),
+                  minScale: 1,
+                  maxScale: 4,
+                  onInteractionUpdate: (details) {
+                    final val = _controller.value.getMaxScaleOnAxis();
 
-                  ref.read(textStateProvider.notifier).updateMultiplier(
-                        id: widget.id,
-                        multiplier: val,
-                      );
-                },
-                onInteractionEnd: (data) {},
-                child: Container(
-                  color: Colors.black12,
-                  height: MediaQuery.of(context).size.height *
-                      0.04 *
-                      scaleMultiplier,
-                  width: MediaQuery.of(context).size.width * scaleMultiplier,
+                    ref.read(textStateProvider.notifier).updateMultiplier(
+                          id: widget.id,
+                          multiplier: val,
+                        );
+                  },
+                  onInteractionEnd: (data) {},
+                  child: Container(
+                    color: Colors.transparent,
+                    height: MediaQuery.of(context).size.height *
+                        0.04 *
+                        scaleMultiplier,
+                    width: MediaQuery.of(context).size.width * scaleMultiplier,
+                  ),
                 ),
               ),
             ],
