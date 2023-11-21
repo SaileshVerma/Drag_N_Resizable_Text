@@ -87,7 +87,7 @@ class _DraggableNResizableImageState
               Container(
                   height: 100 * scaleMultiplier,
                   width: 100 * scaleMultiplier,
-                  child: Image.network(widget.image)),
+                  child: Image.file(File(widget.image))),
               InteractiveViewer(
                 panEnabled: false,
                 trackpadScrollCausesScale: true,
@@ -111,8 +111,8 @@ class _DraggableNResizableImageState
                   color: Colors.transparent,
                   child: Opacity(
                     opacity: 0,
-                    child: Image.network(
-                      widget.image,
+                    child: Image.file(
+                      File(widget.image),
                     ),
                   ),
                 ),
