@@ -55,8 +55,8 @@ class ImageChildWhenDraggingWidget extends StatelessWidget {
         height: 100 * scaleMultiplier,
         width: 100 * scaleMultiplier,
         color: Colors.transparent,
-        child: Image.file(
-          File(imagePath),
+        child: Image.network(
+          imagePath,
         ),
       ),
     );

@@ -27,6 +27,24 @@ class PositionedImageState {
       scaleMultiplier: scaleMultiplier ?? this.scaleMultiplier,
     );
   }
+
+  factory PositionedImageState.fromJson({required Map<String, dynamic> json}) {
+    return PositionedImageState(
+      id: json['id'],
+      image: json['imageURL'],
+      offset:
+          Offset(double.parse(json['offsetX']), double.parse(json['offsetY'])),
+      scaleMultiplier: double.parse(json['scaleMultiplier']),
+    );
+  }
+
+  Map toJson() => {
+        'id': id,
+        'imageURL': image,
+        'offsetX': offset.dx,
+        'offsetY': offset.dy,
+        'scaleMultiplier': scaleMultiplier,
+      };
 }
 
 class ImagesStateNotifier extends StateNotifier<List<PositionedImageState>> {

@@ -61,8 +61,8 @@ class ImageFeedBackWidget extends StatelessWidget {
           height: 100 * scaleVal,
           width: 100 * scaleVal,
           color: Colors.transparent,
-          child: Image.file(
-            File(imagePath),
+          child: Image.network(
+            imagePath,
           ),
         ),
       ),

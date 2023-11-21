@@ -31,6 +31,26 @@ class PositionedTextState {
       isBold: isBold ?? this.isBold,
     );
   }
+
+  factory PositionedTextState.fromJson({required Map<String, dynamic> json}) {
+    return PositionedTextState(
+      id: json['id'],
+      text: json['text'],
+      offset:
+          Offset(double.parse(json['offsetX']), double.parse(json['offsetY'])),
+      scaleMultiplier: double.parse(json['scaleMultiplier']),
+      isBold: true,
+    );
+  }
+
+  Map toJson() => {
+        'id': id,
+        'text': text,
+        'offsetX': offset.dx,
+        'offsetY': offset.dy,
+        'scaleMultiplier': scaleMultiplier,
+        'isBold': true,
+      };
 }
 
 class TextStateNotifier extends StateNotifier<List<PositionedTextState>> {
