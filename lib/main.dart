@@ -9,7 +9,7 @@ void main() async {
   await ScreenUtil.ensureScreenSize();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (ctx) => const ProviderScope(
         child: MyApp(),
       ),

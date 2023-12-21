@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class FeedBackWidget extends StatelessWidget {
@@ -53,17 +51,17 @@ class ImageFeedBackWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = scaleVal * MediaQuery.of(context).size.height * 0.2;
+    final width = scaleVal * MediaQuery.of(context).size.height * 0.2;
     return Material(
       color: Colors.transparent,
       child: Opacity(
         opacity: 0.8,
         child: Container(
-          height: 100 * scaleVal,
-          width: 100 * scaleVal,
-          color: Colors.transparent,
-          child: Image.file(
-            File(imagePath),
-          ),
+          height: height,
+          width: width,
+          color: Colors.amber,
+          child: Center(child: Text('$height X $width')),
         ),
       ),
     );

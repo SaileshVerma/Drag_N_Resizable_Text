@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class ChildWhenDraggingWidget extends StatelessWidget {
@@ -30,33 +28,6 @@ class ChildWhenDraggingWidget extends StatelessWidget {
               fontWeight: (isBold ?? false) ? FontWeight.w700 : null,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class ImageChildWhenDraggingWidget extends StatelessWidget {
-  final double scaleMultiplier;
-  final String imagePath;
-
-  const ImageChildWhenDraggingWidget({
-    required this.scaleMultiplier,
-    required this.imagePath,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    print('################  $imagePath');
-    return Opacity(
-      opacity: 0.2,
-      child: Container(
-        height: 100 * scaleMultiplier,
-        width: 100 * scaleMultiplier,
-        color: Colors.transparent,
-        child: Image.file(
-          File(imagePath),
         ),
       ),
     );

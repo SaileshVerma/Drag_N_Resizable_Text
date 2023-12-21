@@ -4,27 +4,31 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class PositionedImageState {
   final String id;
   final String image;
-  final Offset offset;
+  final double xUnit;
+  final double yUnit;
   final double scaleMultiplier;
 
   const PositionedImageState({
     required this.id,
     required this.image,
-    required this.offset,
     required this.scaleMultiplier,
+    required this.xUnit,
+    required this.yUnit,
   });
 
   PositionedImageState copyWith({
     String? id,
     String? image,
-    Offset? offset,
     double? scaleMultiplier,
+    double? xUnit,
+    double? yUnit,
   }) {
     return PositionedImageState(
       id: id ?? this.id,
       image: image ?? this.image,
-      offset: offset ?? this.offset,
       scaleMultiplier: scaleMultiplier ?? this.scaleMultiplier,
+      xUnit: xUnit ?? this.xUnit,
+      yUnit: yUnit ?? this.yUnit,
     );
   }
 
@@ -32,18 +36,18 @@ class PositionedImageState {
     return PositionedImageState(
       id: json['id'],
       image: json['imageURL'],
-      offset:
-          Offset(double.parse(json['offsetX']), double.parse(json['offsetY'])),
       scaleMultiplier: double.parse(json['scaleMultiplier']),
+      xUnit: double.parse(json['xUnit']),
+      yUnit: double.parse(json['yUnit']),
     );
   }
 
   Map toJson() => {
         'id': id,
         'imageURL': image,
-        'offsetX': offset.dx,
-        'offsetY': offset.dy,
         'scaleMultiplier': scaleMultiplier,
+        'xUnit': xUnit,
+        'yUnit': yUnit,
       };
 }
 
@@ -59,12 +63,15 @@ class ImagesStateNotifier extends StateNotifier<List<PositionedImageState>> {
 
     final newOffset = Offset(134.0, 172.7);
 
-    newList.add(PositionedImageState(
-      id: DateTime.now().toIso8601String(),
-      offset: newOffset,
-      scaleMultiplier: 1,
-      image: image,
-    ));
+    newList.add(
+      PositionedImageState(
+        id: DateTime.now().toIso8601String(),
+        xUnit: 0.2,
+        yUnit: 0.2,
+        scaleMultiplier: 1,
+        image: image,
+      ),
+    );
 
     state = [...newList];
   }
@@ -85,15 +92,17 @@ class ImagesStateNotifier extends StateNotifier<List<PositionedImageState>> {
     state = [...newList];
   }
 
-  void updateTextOffset({
+  void updateImageOffsetUnits({
     required String id,
-    required Offset offset,
+    required double xUnit,
+    required double yUnit,
   }) {
     final newList = [...state];
     var item = newList.firstWhere((element) => element.id == id);
 
     final updatedItem = item.copyWith(
-      offset: offset,
+      xUnit: xUnit,
+      yUnit: yUnit,
     );
 
     newList[newList.indexWhere((element) => element.id == id)] = updatedItem;

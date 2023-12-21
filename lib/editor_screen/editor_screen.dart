@@ -74,7 +74,8 @@ class EditorBody extends StatelessWidget {
                       return DraggableNResizableImage(
                         id: textItem.id,
                         image: textItem.image,
-                        initialOffset: textItem.offset,
+                        xUnit: textItem.xUnit,
+                        yUnit: textItem.yUnit,
                         multiplier: textItem.scaleMultiplier,
                         constraints: constraints,
                       );

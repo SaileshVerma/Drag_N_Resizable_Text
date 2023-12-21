@@ -1,24 +1,25 @@
 import 'dart:io';
-
-import 'package:drag_n_drop/editor_screen/widgets/child_when_dragged_widget.dart';
-import 'package:drag_n_drop/editor_screen/widgets/feed_back_widget.dart';
+import 'package:drag_n_drop/editor_screen/widgets/image_holder_widget.dart';
 import 'package:drag_n_drop/providers/image_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:photo_view/photo_view.dart';
 
 class DraggableNResizableImage extends ConsumerStatefulWidget {
   final String id;
-  final Offset initialOffset;
   final double multiplier;
   final String image;
   final BoxConstraints constraints;
+  final double xUnit;
+  final double yUnit;
 
   const DraggableNResizableImage({
     required this.id,
     required this.image,
-    required this.initialOffset,
     required this.multiplier,
     required this.constraints,
+    required this.xUnit,
+    required this.yUnit,
     super.key,
   });
 
@@ -29,95 +30,98 @@ class DraggableNResizableImage extends ConsumerStatefulWidget {
 
 class _DraggableNResizableImageState
     extends ConsumerState<DraggableNResizableImage> {
-  final TransformationController _controller = TransformationController();
-  late Offset currentTextOffset;
   double scaleMultiplier = 1;
+  double scaleFactor = 1;
+  double xUnit = 0;
+  double yUnit = 0;
 
   @override
   void initState() {
-    currentTextOffset = widget.initialOffset;
+    scaleFactor = widget.multiplier;
+
+    xUnit = widget.xUnit;
+    yUnit = widget.yUnit;
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    scaleMultiplier = widget.multiplier;
-    currentTextOffset = widget.initialOffset;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    // final aspectRatio = 1; //MediaQuery.of(context).size.aspectRatio;
 
     return Positioned(
-      left: currentTextOffset.dx,
-      top: currentTextOffset.dy,
-      child: LongPressDraggable(
-        maxSimultaneousDrags: 1,
-        feedback: ImageFeedBackWidget(
-          scaleVal: scaleMultiplier,
-          imagePath: widget.image,
-        ),
-        onDragEnd: (details) {
-          final adjustments =
-              MediaQuery.of(context).size.height - widget.constraints.maxHeight;
-          // setState(() {
+      left: xUnit * width, //x-axis
+      top: yUnit * height, //y-axis
+      child: Draggable(
+        onDragUpdate: (details) {
+          setState(() {
+            xUnit = (((xUnit * width) + details.delta.dx)) / width;
+            yUnit = (((yUnit * height) + details.delta.dy)) / height;
+          });
 
-          currentTextOffset = Offset(
-            details.offset.dx,
-            details.offset.dy - adjustments,
-          );
-
-          ref.read(imagesStateProvider.notifier).updateTextOffset(
+          ref.read(imagesStateProvider.notifier).updateImageOffsetUnits(
                 id: widget.id,
-                offset: currentTextOffset,
+                xUnit: xUnit,
+                yUnit: yUnit,
               );
-
-          // });
         },
-        childWhenDragging: ImageChildWhenDraggingWidget(
-          scaleMultiplier: scaleMultiplier,
-          imagePath: widget.image,
+        feedback: Material(
+          color: Colors.transparent,
+          child: SlideContentImageHolder(
+            uid: '',
+            imageHolderDimension: height * 0.3 * scaleFactor,
+            imageUrl: widget.image,
+            scaleFactor: scaleFactor,
+          ),
+        ),
+        childWhenDragging: Opacity(
+          opacity: 0.3,
+          child: SlideContentImageHolder(
+            uid: '',
+            imageHolderDimension: height * 0.3 * scaleFactor,
+            imageUrl: widget.image,
+            scaleFactor: scaleFactor,
+          ),
         ),
         child: Container(
           color: Colors.transparent,
-          height: 100 * scaleMultiplier,
-          width: 100 * scaleMultiplier,
-          // height: MediaQuery.of(context).size.height * 0.2 * scaleMultiplier,
-          // width: MediaQuery.of(context).size.width * 0.8 * scaleMultiplier,
-          child: Stack(
-            // alignment: Alignment.center,
-            children: [
-              Container(
-                  height: 100 * scaleMultiplier,
-                  width: 100 * scaleMultiplier,
-                  child: Image.file(File(widget.image))),
-              InteractiveViewer(
-                panEnabled: false,
-                trackpadScrollCausesScale: true,
-                transformationController: _controller,
-                scaleEnabled: true,
-                boundaryMargin: const EdgeInsets.all(0),
-                minScale: 1,
-                maxScale: 10,
-                onInteractionUpdate: (details) {
-                  final val = _controller.value.getMaxScaleOnAxis();
-
-                  ref.read(imagesStateProvider.notifier).updateMultiplier(
-                        id: widget.id,
-                        multiplier: val,
-                      );
-                },
-                onInteractionEnd: (data) {},
-                child: Container(
-                  height: 100 * scaleMultiplier,
-                  width: 100 * scaleMultiplier,
-                  color: Colors.transparent,
-                  child: Opacity(
-                    opacity: 0,
-                    child: Image.file(
-                      File(widget.image),
-                    ),
-                  ),
-                ),
+          height: height,
+          width: width,
+          child: PhotoView.customChild(
+            basePosition: Alignment.topLeft,
+            tightMode: true,
+            enablePanAlways: false,
+            heroAttributes: PhotoViewHeroAttributes(tag: "tag${widget.id}"),
+            // minScale: PhotoViewComputedScale.contained,
+            // maxScale: PhotoViewComputedScale.covered,
+            // wantKeepAlive: true,
+            initialScale: scaleFactor,
+            backgroundDecoration: const BoxDecoration(
+              color: Colors.amber,
+            ),
+            onScaleEnd: (ctx, value, details) {
+              setState(() {
+                scaleFactor = (details.scale ?? 1);
+                print(
+                    '################################################### ": $scaleFactor');
+              });
+              ref.read(imagesStateProvider.notifier).updateMultiplier(
+                    multiplier: scaleFactor,
+                    id: widget.id,
+                  );
+            },
+            child: Container(
+              height: 100,
+              width: 100,
+              child: Image.file(
+                File(widget.image),
+                fit: BoxFit.contain,
+                height: 100,
+                width: 100,
               ),
-            ],
+            ),
           ),
         ),
       ),

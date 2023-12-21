@@ -7,7 +7,8 @@ import 'package:share_plus/share_plus.dart';
 
 Future<XFile> getXFileFromUint8List(imageInUnit8List) async {
   final tempDir = await getTemporaryDirectory();
-  File file = await File('${tempDir.path}/image.png').create();
+  final path = DateTime.now().toIso8601String();
+  File file = await File('${tempDir.path}/${path}image.png').create();
   file.writeAsBytesSync(imageInUnit8List);
 
   XFile xFile = XFile(file.path);

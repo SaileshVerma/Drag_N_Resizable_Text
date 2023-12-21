@@ -49,7 +49,7 @@ class _DraggableNResizableTextState
     return Positioned(
       left: currentTextOffset.dx,
       top: currentTextOffset.dy,
-      child: LongPressDraggable(
+      child: Draggable(
         maxSimultaneousDrags: 1,
         feedback: FeedBackWidget(
           scaleVal: scaleMultiplier,
